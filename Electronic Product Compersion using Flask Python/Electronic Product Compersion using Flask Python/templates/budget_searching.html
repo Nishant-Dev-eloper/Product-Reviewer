@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search by Budget</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
+    <style>
+        /* Body and background styling */
+        /* Body and background styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom, #8e44ad, #3498db);
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    background-size: cover;
+    animation: gradientAnimation 10s infinite;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Container for the whole page */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    color: #f5f5f5;
+    text-align: center;
+}
+
+/* Header Styling */
+header {
+    text-align: center;
+    padding: 20px 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 2s ease-out;
+}
+
+h1 {
+    font-size: 3em;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    color: #ffdd59;
+    animation: textBounce 3s infinite;
+}
+
+@keyframes textBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Form Styling */
+form {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: slideUp 1.5s ease-out;
+}
+
+@keyframes slideUp {
+    0% { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+form label {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #f8f9fa;
+}
+
+form input[type="text"],
+form input[type="number"],
+form select {
+    padding: 12px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.7);
+    color: #333;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form select:focus {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.05);
+}
+
+form input[type="submit"] {
+    padding: 12px;
+    background: linear-gradient(to right, #ff5733, #ff8d1a);
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 87, 51, 0.6);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    h1 {
+        font-size: 2.5em;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    form label {
+        font-size: 1em;
+    }
+
+    form input[type="text"],
+    form input[type="number"],
+    form select {
+        font-size: 1em;
+    }
+
+    form input[type="submit"] {
+        font-size: 1em;
+    }
+
+    .container {
+        max-width: 90%;
+        margin: 20px auto;
+    }
+}
+
+/* Side Navbar Styles */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.9);
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #f8f9fa;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #ffdd59;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+}
+
+/* Additional Animations */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+select:hover {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.4);
+}
+
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container mt-5">
+        <h2>Search by Budget</h2>
+        <p>Use this page to find products within your budget.</p>
+    </div>
+
+    <div class="container">
+        <div class="content">
+            <form method="POST" action="/result">
+                <label for="category">Select Category:</label>
+                <select name="category" id="category">
+                    {% for file in csv_files1 %}
+                    <option value="{{ file.split('.')[0] }}">{{ file.split('.')[0] }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="budget">Enter Budget:</label>
+                <input type="number" name="budget" id="budget" step="0.01" placeholder="e.g., 50000" required>
+
+                <label for="chart_type">Select Chart Type:</label>
+                <select name="chart_type" id="chart_type">
+                    <option value="Bar">Bar</option>
+                    <option value="Line">Line</option>
+                    <option value="Pie">Pie</option>
+                    <option value="Heatmap">Heatmap</option>
+                </select>
+
+                <input type="submit" value="Get Top Products">
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

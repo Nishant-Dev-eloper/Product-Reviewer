@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS */
+        /* Updated Custom CSS */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #8e44ad, #3498db);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    animation: backgroundAnimation 10s infinite alternate;
+}
+
+@keyframes backgroundAnimation {
+    0% {
+        background: linear-gradient(135deg, #8e44ad, #3498db);
+    }
+    50% {
+        background: linear-gradient(135deg, #f39c12, #d35400);
+    }
+    100% {
+        background: linear-gradient(135deg, #2ecc71, #1abc9c);
+    }
+}
+
+/* Side Navbar Styles */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    overflow-x: hidden;
+    transition: width 0.5s ease;
+    padding-top: 60px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #f1c40f;
+    display: block;
+    transition: color 0.3s ease;
+}
+
+.sidenav a:hover {
+    color: #e74c3c;
+    transform: scale(1.1);
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    color: #fff;
+}
+
+/* Container styling */
+.container {
+    max-width: 900px;
+    margin: 80px auto;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: none;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header styling */
+h1,
+h2 {
+    text-align: center;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, #e67e22, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textGradient 5s infinite;
+}
+
+@keyframes textGradient {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 100%;
+    }
+}
+
+h2 {
+    font-size: 1.8rem;
+    color: #555;
+}
+
+/* Input and button styling */
+input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    margin-top: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+    outline: none;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #e67e22, #3498db);
+    border: none;
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, #3498db, #e67e22);
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: none;
+    text-align: center;
+    margin-top: 30px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Result container styling */
+.result-container {
+    display: none;
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.7s ease-in-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Table styling */
+.table {
+    width: 100%;
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+.table th {
+    background: linear-gradient(90deg, #e67e22, #3498db);
+    color: #fff;
+    font-weight: bold;
+}
+
+.table tbody tr:hover {
+    background-color: #f7f7f7;
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    h1,
+    h2 {
+        text-align: center;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 15px;
+    }
+}
+
+    </style>
+    
+    
+</head>
+
+<body>
+
+    <!-- Navbar (will remain visible) -->
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <h1>Hello, User</h1>
+        <h2>How can I help you today?</h2>
+
+        <input type="text" class="form-control" placeholder="Enter a tech product name here" id="promptInput">
+        <button id="submitButton" class="btn btn-primary mt-3">Submit</button>
+
+        <!-- Loading spinner -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <h3>Product Review</h3>
+            <div id="resultText"></div>
+        </div>
+    </div>
+
+    <script>
+        // Get all the necessary DOM elements
+        const promptInput = document.getElementById('promptInput');
+        const submitButton = document.getElementById('submitButton');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultText = document.getElementById('resultText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const heading1 = document.querySelector('h1');
+        const heading2 = document.querySelector('h2');
+        const navbar = document.querySelector('nav');
+
+        // Function to submit when pressing Enter key
+        promptInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                submitButton.click(); // Trigger the submit button's click event
+            }
+        });
+
+        // Submit button event listener
+        submitButton.addEventListener('click', () => {
+            const promptText = promptInput.value;
+
+            // Check if the input is not empty
+            if (promptText.trim() === '') {
+                alert('Please enter a tech product name.');
+                return;
+            }
+
+            // Show the loading spinner and keep navbar and headings visible
+            loadingSpinner.style.display = 'block';
+
+            // Send the prompt to the Gemini AI API
+            const apiKey = 'AIzaSyCKejhvIA1FOUcEkteHH5BNyX8fu7dndWs'; // Replace with your actual API key
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+
+            const requestBody = {
+                contents: [
+                    {
+                        parts: [
+                            { text: `Provide a review for the following tech product: ${promptText}. Include company name, features (display, processor, ram, rom, battery life, ports, graphics), reviews, ratings, price, and eCommerce links (Amazon, Flipkart, etc.).` }
+                        ]
+                    }
+                ]
+            };
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Hide the loading spinner
+                    loadingSpinner.style.display = 'none';
+
+                    if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
+                        const result = data.candidates[0].content.parts[0].text;
+
+                        // Format the response with a table
+                        const formattedResult = formatReview(result);
+                        resultText.innerHTML = formattedResult;
+                    } else {
+                        resultText.textContent = 'No valid content received.';
+                    }
+                    resultContainer.style.display = 'block';
+
+                    // Clear the input field after submission so the user can input again
+                    promptInput.value = '';
+                })
+                .catch(error => {
+                    // Hide the loading spinner in case of error
+                    loadingSpinner.style.display = 'none';
+
+                    console.error('Error sending prompt:', error);
+                    resultText.textContent = 'Error fetching product review. Please try again.';
+                    resultContainer.style.display = 'block';
+                });
+        });
+
+        // Function to format the result into a table
+        function formatReview(review) {
+            // Initialize an empty table
+            let table = `<table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+            // Extracting parts from the review text and adding them to the table
+            review = review.replace(/##\s*/g, '').replace(/\*\*\s*/g, ''); // Clean up unwanted symbols
+
+            // Match each section of the review (Company Name, Features, Reviews, etc.)
+            const sections = [
+                { label: 'Company Name', regex: /Company Name:(.*?)Price:/s },
+                { label: 'Price', regex: /Price:(.*?)Details:/s },
+                { label: 'Details', regex: /Details:(.*?)Subfeatures:/s },
+                { label: 'Subfeatures', regex: /Subfeatures:(.*?)Reviews:/s },
+                { label: 'Reviews', regex: /Reviews:(.*?)Ratings:/s },
+                { label: 'Ratings', regex: /Ratings:(.*)/s }
+            ];
+
+            sections.forEach(section => {
+                const match = review.match(section.regex);
+                if (match) {
+                    table += `<tr>
+                                <td><strong>${section.label}</strong></td>
+                                <td>${match[1].trim()}</td>
+                              </tr>`;
+                }
+            });
+
+            // Extract Subfeatures (Display, Processor, RAM, ROM, Battery Life, Ports, Graphics)
+            const subfeatures = [
+                { label: 'Display', regex: /Display:(.*?)Processor:/s },
+                { label: 'Processor', regex: /Processor:(.*?)RAM:/s },
+                { label: 'RAM', regex: /RAM:(.*?)ROM:/s },
+                { label: 'ROM', regex: /ROM:(.*?)Battery Life:/s },
+                { label: 'Battery Life', regex: /Battery Life:(.*?)Ports:/s },
+                { label: 'Ports', regex: /Ports:(.*?)Graphics:/s },
+                { label: 'Graphics', regex: /Graphics:(.*?)Price:/s }
+            ];
+
+            subfeatures.forEach(subfeature => {
+                const match = review.match(subfeature.regex);
+                if (match) {
+                    table += `<tr>
+                                <td><strong>${subfeature.label}</strong></td>
+                                <td>${match[1].trim()}</td>
+                              </tr>`;
+                }
+            });
+
+            // Extracting eCommerce links (Amazon, Flipkart)
+            const ecommerceLinks = /(https:\/\/www\.(?:amazon|flipkart)\.com[^ ]+)/g;
+            const links = review.match(ecommerceLinks);
+            if (links) {
+                table += `<tr>
+                            <td><strong>eCommerce Links</strong></td>
+                            <td>${links.join('<br>')}</td>
+                          </tr>`;
+            }
+
+            table += `</tbody></table>`;
+            return table;
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
